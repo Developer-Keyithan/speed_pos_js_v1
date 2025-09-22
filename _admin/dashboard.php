@@ -46,59 +46,59 @@ $today_orders_amount = get_sum('orders', 'total_amt', 'order_status', 0, null, t
     </div>
 
     <div class="card-body row p-1">
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pieces") ?></span><span class="badge bg-warning"><?php echo $total_products ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pieces") ?></span><span class="badge bg-warning text-md"><?php echo $total_products ?></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_gold_pieces") ?></span><span><span class="badge bg-warning"><?php echo $gold_products ?></span> <span class="badge bg-warning"><?php echo $total_golds_weight . 'g' ?></span></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_gold_pieces") ?></span><span><span class="badge bg-warning text-md"><?php echo $gold_products ?></span> <span class="badge bg-warning text-md"><?php echo $total_golds_weight . 'g' ?></span></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_silver_pieces") ?></span><span><span class="badge bg-warning"><?php echo $silver_products ?></span> <span class="badge bg-warning"><?php echo $total_silver_weight . 'g' ?></span></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_silver_pieces") ?></span><span><span class="badge bg-warning text-md"><?php echo $silver_products ?></span> <span class="badge bg-warning text-md"><?php echo $total_silver_weight . 'g' ?></span></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_customers") ?></span><span class="badge bg-warning"><?php echo $customers ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_customers") ?></span><span class="badge bg-warning text-md"><?php echo $customers ?></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pre_orders") ?></span><span class="badge bg-warning"><?php echo $orders ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pre_orders") ?></span><span class="badge bg-warning text-md"><?php echo $orders ?></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_unfinished_pre_orders") ?></span><span><span class="badge bg-warning"><?php echo $unfinished_orders ?></span> <span class="badge bg-warning"><?php echo 'Rs.' . number_format($unfinished_orders_outstanding, 2) ?></span></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_unfinished_pre_orders") ?></span><span><span class="badge bg-warning text-md"><?php echo $unfinished_orders ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($unfinished_orders_outstanding, 2) ?></span></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_invoices") ?></span><span class="badge bg-warning"><?php echo $invoices ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_invoices") ?></span><span class="badge bg-warning text-md"><?php echo $invoices ?></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_invoice_outstandings") ?></span><span><span class="badge bg-warning"><?php echo $invoices ?></span> <span class="badge bg-warning"><?php echo 'Rs.' . number_format($invoice_outstanding, 2) ?></span></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_invoice_outstandings") ?></span><span><span class="badge bg-warning text-md"><?php echo $invoices ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($invoice_outstanding, 2) ?></span></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_sold_pieces") ?></span><span class="badge bg-warning"><?php echo $sold ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_sold_pieces") ?></span><span class="badge bg-warning text-md"><?php echo $sold ?></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_sale") ?></span><span><span class="badge bg-warning"><?php echo $today_sold ?></span> <span class="badge bg-warning"><?php echo 'Rs.' . number_format($today_sales_amount, 2) ?></span></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_sale") ?></span><span><span class="badge bg-warning text-md"><?php echo $today_sold ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($today_sales_amount, 2) ?></span></span></p>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 col-xl-2 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-2 px-3">
-                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_pre_orders") ?></span><span><span class="badge bg-warning"><?php echo $today_sold ?></span> <span class="badge bg-warning"><?php echo 'Rs.' . number_format($today_orders_amount, 2) ?></span></p>
+        <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
+            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+                <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_pre_orders") ?></span><span><span class="badge bg-warning text-md"><?php echo $today_sold ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($today_orders_amount, 2) ?></span></p>
             </div>
         </div>
     </div>
@@ -109,15 +109,15 @@ $today_orders_amount = get_sum('orders', 'total_amt', 'order_status', 0, null, t
         </div>
         <div class="row p-4">
             <div class="form-group col-12 col-sm-6 col-xl-3 py-2 pr-2 m-0">
-                <label>22k Gold <span class="text-danger">*</span></label>
+                <label>22k Gold (per 8g) <span class="text-danger">*</span></label>
                 <input type="text" ng-model="materials.gold22" class="form-control" placeholder="22k Gold Price">
             </div>
             <div class="form-group col-12 col-sm-6 col-xl-3 py-2 px-2 m-0">
-                <label>24k Gold <span class="text-danger">*</span></label>
+                <label>24k Gold (per 8g) <span class="text-danger">*</span></label>
                 <input type="text" ng-model="materials.gold24" class="form-control" placeholder="24k Gold Price">
             </div>
             <div class="form-group col-12 col-sm-6 col-xl-3 py-2 px-2 m-0">
-                <label>Silver <span class="text-danger">*</span></label>
+                <label>Silver (per 8g) <span class="text-danger">*</span></label>
                 <input type="text" ng-model="materials.silver" class="form-control" placeholder="Silver Price">
             </div>
             <div class="form-group col-12 col-sm-6 col-xl-3 pl-2 m-0 pt-2 mt-1">

@@ -179,7 +179,7 @@ if ($request->server['REQUEST_METHOD'] == 'GET' && $request->get['action_type'] 
             $row['edit'] = '<button id="edit-user"  class="btn btn-outline-success btn-sm edit-btn"  title="Edit"><i class="fas fa-edit"></i></button>';
             // } else {
             // $row['view'] = '<button id="view-user" class="btn btn-outline-info btn-sm view-btn"  title="View"><i class="fas fa-eye"></i></button>';
-            $row['view'] = '<a href="user_profile.php?id=' . $row['id'] . '" class="btn btn-outline-info btn-sm" title="View">
+            $row['view'] = '<a href="user_profile.php?user=' . $row['id'] . '" class="btn btn-outline-info btn-sm" title="View">
                     <i class="fas fa-eye"></i>
                  </a>';
             // }

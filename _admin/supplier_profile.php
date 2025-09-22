@@ -41,7 +41,7 @@ include('src/_top.php');
                 <h3 class="profile-username text-center"><?php echo $the_supplier['s_name'] ?></h3>
 
                 <p class="text-muted text-center"><?php echo trans('text_since'); ?>:
-                    <?php echo date('d F, Y', strtotime($the_supplier['created_at'])); ?>
+                    <?php echo date('d M, Y', strtotime($the_supplier['created_at'])); ?>
                 </p>
 
                 <ul class="list-group list-group-unbordered mb-3">
