@@ -872,3 +872,47 @@ function get_sum($table_name, $sum_column, $filter_column = null, $filter_value 
 	$result = $statement->fetch(PDO::FETCH_ASSOC);
 	return $result['total'] ?? 0;
 }
+
+function getCategoryPath($categoryId)
+{
+	$pdo = db();
+	$path = [];
+
+	while ($categoryId != 0) {
+		$stmt = $pdo->prepare("SELECT id, c_name, p_id FROM category WHERE id = ?");
+		$stmt->execute([$categoryId]);
+		$category = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if (!$category) break;
+
+		array_unshift($path, $category['c_name']);
+		$categoryId = $category['p_id'];
+	}
+
+	return implode("/", $path);
+}
+
+function getMaterial($categoryId)
+{
+	$pdo = db();
+	$mainCategory = null;
+
+	while ($categoryId != 0) {
+		$stmt = $pdo->prepare("SELECT id, c_name, p_id FROM category WHERE id = ?");
+		$stmt->execute([$categoryId]);
+		$category = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if (!$category) break;
+
+		// If parent is 0, this is the main category
+		if ($category['p_id'] == 0) {
+			$mainCategory = $category['id'];
+			break;
+		}
+
+		// Move up the tree
+		$categoryId = $category['p_id'];
+	}
+
+	return $mainCategory;
+}

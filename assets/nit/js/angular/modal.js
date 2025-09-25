@@ -432,7 +432,8 @@ angularApp.factory("categoryAddModal", [
         $compile,
         $timeout
     ) {
-        return function ($scope) {
+        return function ($scope, data = {}) {
+            $scope.p_id = data.id;
             const modalId = "categoryAddModal";
             // Step 1: Load modal form from server
             $http.get(window.baseUrl + "/_inc/_category.php?action_type=CREATE").then(function (response) {
@@ -461,12 +462,23 @@ angularApp.factory("categoryAddModal", [
             $(document).off("click", "#create_category_submit").on("click", "#create_category_submit", function (e) {
                 e.preventDefault();
 
+
+                // Serialize form to array first
+                var formArray = $('#create-category-form').serializeArray();
+                var formDataObj = {};
+                $.each(formArray, function (_, field) {
+                    formDataObj[field.name] = field.value;
+                });
+
+                // Add custom fields
+                formDataObj.p_id = $scope.p_id;
+                var serializedData = $.param(formDataObj);
                 var $tag = $(this);
 
                 $http({
                     url: window.baseUrl + "/_inc/_category.php",
                     method: "POST",
-                    data: $('#create-category-form').serialize(),
+                    data: serializedData,
                     cache: false,
                     processData: false,
                     contentType: false,
@@ -919,11 +931,20 @@ angularApp.factory("ProductAddModal", [
         $compile,
         $timeout, SupplierAddModal
     ) {
-        return function ($scope) {
+        return function ($scope, data = {}) {
             const modalId = "ProductAddModal";
             // Step 1: Load modal form from server
             $http.get(window.baseUrl + "/_inc/_product.php?action_type=CREATE").then(function (response) {
                 const formHtml = response.data;
+
+                $scope.path = data.categoryPath;
+                $scope.categoryName = data.categoryName;
+                $scope.categoryId = data.id;
+                $scope.material = data.material;
+
+                $scope.code = data.productCode;
+                // $scope.serialId = data.productCode.replace(/^NJV/, '');
+
 
                 $(`#${modalId}`).remove();
                 $scope.modalTitle = "Add Product";
@@ -948,38 +969,202 @@ angularApp.factory("ProductAddModal", [
             $rootScope.suplierAddModal = function () {
                 SupplierAddModal($scope);
             }
+
+            // Hide page-2 and Create button initially
+            $("#page-2").addClass("d-none");
+            $("#create_product_submit").hide();
+
+            // When modal is shown → reset view and focus first input
+            $(document).on('shown.bs.modal', '#ProductAddModal', function () {
+                $("#page-1").removeClass("d-none");
+                $("#page-2").addClass("d-none");
+                $("#product_add").show();
+                $("#create_product_submit").hide();
+                $("#create-product-form")[0].reset();
+                $("#page-1").find("input, textarea").first().focus();
+            });
+
+            // Auto-select value when field focused
+            $(document).on("focus", "#create-product-form input, #create-product-form textarea", function () {
+                $(this).select();
+            });
+
+            // Enter key navigation
+            $(document).on("keydown", "#create-product-form input, #create-product-form textarea", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+
+                    let $fields = $(this).closest("#create-product-form")
+                        .find("input, textarea")
+                        .filter(":visible");
+                    let index = $fields.index(this);
+
+                    if (index + 1 < $fields.length) {
+                        $fields.eq(index + 1).focus();
+                    } else {
+                        // End of current page
+                        if ($("#page-1").is(":visible")) {
+                            goToPage2();
+                        } else {
+                            $("#create_product_submit").trigger("click");
+                        }
+                    }
+                }
+            });
+
+            $(document).ready(function () {
+                $("#s_id").val("1").trigger('change');
+            });
+
+            // Next button click → go to page-2
+            $(document).on("click", "#product_add", function () {
+                goToPage2();
+            });
+
+            // Reset button or ESC → clear + close modal
+            $(document).on("click", "#create_product_reset", function () {
+                resetAndClose();
+            });
+
+            $(document).on("keydown", function (e) {
+                if (e.key === "Escape") {
+                    resetAndClose();
+                }
+            });
+
+            // Reset progress when modal opens
+            $(document).on('shown.bs.modal', '#ProductAddModal', function () {
+                updateProgress(1);
+            });
+
+            // Next button → Page 2
+            function goToPage2() {
+                $("#page-1").addClass("d-none");
+                $("#page-2").removeClass("d-none");
+                $("#product_add").hide();
+                $("#create_product_submit").show();
+                $("#page-2").find("input, textarea").first().focus();
+                updateProgress(2);
+            }
+
+            // Reset → Back to Page 1
+            function resetAndClose() {
+                $("#create-product-form")[0].reset();
+                $("#page-1").removeClass("d-none");
+                $("#page-2").addClass("d-none");
+                $("#product_add").show();
+                $("#create_product_submit").hide();
+                updateProgress(1);
+
+                let modalEl = $("#ProductAddModal");
+                if (modalEl.length) {
+                    let modalInstance = bootstrap.Modal.getInstance(modalEl[0]);
+                    if (modalInstance) modalInstance.hide();
+                }
+            }
+
+            function updateProgress(page) {
+                if (page === 1) {
+                    $("#form-progress")
+                        .css("width", "50%")
+                        .attr("aria-valuenow", 50);
+                    $(".nav-dot").removeClass("active");
+                    $(".nav-dot[data-page='1']").addClass("active");
+                } else if (page === 2) {
+                    $("#form-progress")
+                        .css("width", "100%")
+                        .attr("aria-valuenow", 100);
+                    $(".nav-dot").removeClass("active");
+                    $(".nav-dot[data-page='2']").addClass("active");
+                }
+            }
+
+
+            // Click dots manually
+            $(document).on("click", ".nav-dot", function () {
+                let page = $(this).data("page");
+                if (page === 1) {
+                    $("#page-1").removeClass("d-none");
+                    $("#page-2").addClass("d-none");
+                    $("#product_add").show();
+                    $("#create_product_submit").hide();
+                    $("#page-1").find("input, textarea").first().focus();
+                    updateProgress(1);
+                } else if (page === 2) {
+                    goToPage2();
+                }
+            });
+
+            function formatWeight(value) {
+                let num = parseFloat(value);
+
+                // Remove trailing zeros
+                if (Number.isInteger(num)) {
+                    return num + "g"
+                } else if (Math.round(num * 10) === num * 10) {
+                    return num.toFixed(1) + "g";
+                } else {
+                    return num + "g";
+                }
+            }
             $(document).off("click", "#create_product_submit").on("click", "#create_product_submit", function (e) {
                 e.preventDefault();
 
-                var $tag = $(this);
+                // Serialize form to array first
+                var formArray = $('#create-product-form').serializeArray();
+                var formDataObj = {};
+                $.each(formArray, function (_, field) {
+                    formDataObj[field.name] = field.value;
+                });
 
+                // Format weight
+                let formatted = formatWeight($("#cwgt").val());
+
+                // Add custom fields
+                formDataObj.name = $scope.categoryName + ' ' + formatted;
+                formDataObj.code = $scope.code;
+                formDataObj.c_id = $scope.categoryId;
+                formDataObj.material = $scope.material;
+
+                // Convert back to query string (serialized)
+                var serializedData = $.param(formDataObj);
+
+                // Send via Angular $http
                 $http({
                     url: window.baseUrl + "/_inc/_product.php",
                     method: "POST",
-                    data: $('#create-product-form').serialize(),
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    dataType: "json"
+                    data: serializedData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 }).then(
                     function (response) {
-                        var alertMsg = response.data.msg;
-                        Toast.fire({ icon: 'success', title: 'Success!', text: alertMsg });
-                        $('.table').DataTable().ajax.reload(null, false);
+                        Toast.fire({ icon: 'success', title: 'Success!', text: response.data.msg });
+                        // Reset form
+                        $('#create-product-form')[0].reset();
+                        $("#page-1").removeClass("d-none");
+                        $("#page-2").addClass("d-none");
+                        $("#product_add").show();
+                        $("#create_product_submit").hide();
+                        updateProgress(1);
 
-                        if ($scope.modalInstance) {
-                            $scope.modalInstance.hide();
-                        }
+                        // Increment code for next product
+                        let lastCode = $scope.code;
+                        let num = parseInt(lastCode.replace(/^NJV/, '')) + 1;
+                        $scope.code = 'NJV' + num;
 
-                    }, function (response) {
-                        var alertMsg = "";
+                        // Update modal display with new code
+                        $(".text-center h5.text-success").text('NJ Serial ID: ' + $scope.code);
+
+                        // Focus first input
+                        $("#page-1").find("input, textarea").first().focus();
+                    },
+                    function (response) {
+                        let alertMsg = "";
                         window.angular.forEach(response.data, function (value) {
                             alertMsg += value + " ";
                         });
-                        ;
-                        //window.toastr.warning(alertMsg, "Warning!");
                         Toast.fire({ icon: 'error', title: 'Oops!', text: alertMsg });
-                    });
+                    }
+                );
             });
         };
     }

@@ -105,34 +105,77 @@ if (isset($request->get['action_type']) && $request->get['action_type'] == 'GET_
 
 function validate_request_data($request)
 {
-    if (!validateString($request->post['p_name'])) {
-        throw new Exception(trans('error_product_name'));
-    }
-
-    if (!validateString($request->post['p_code'])) {
+    // Validate code
+    if (!isset($request->post['code']) || !validateString($request->post['code'])) {
         throw new Exception(trans('error_product_code'));
     }
 
-    if (!validateInteger($request->post['c_id'])) {
+    // Validate product category
+    if (!isset($request->post['c_id']) || !validateInteger($request->post['c_id'])) {
         throw new Exception(trans('error_product_category'));
     }
 
-    if (!validateInteger($request->post['s_id'])) {
+    // Validate supplier
+    if (!isset($request->post['s_id']) || !validateInteger($request->post['s_id'])) {
         throw new Exception(trans('error_product_supplier'));
     }
 
-    if (empty($request->post['wgt'])) {
+    // Validate weights
+    if (!isset($request->post['wgt']) || !is_numeric($request->post['wgt']) || $request->post['wgt'] < 0) {
         throw new Exception(trans('error_product_weight'));
     }
-    if (empty($request->post['cost'])) {
-        throw new Exception(trans('error_product_cost'));
+    if (!isset($request->post['cwgt']) || !is_numeric($request->post['cwgt']) || $request->post['cwgt'] < 0) {
+        throw new Exception(trans('error_product_weight'));
+    }
+
+    // Check that weights match
+    if (floatval($request->post['wgt']) != floatval($request->post['cwgt'])) {
+        throw new Exception(trans('error_weights_not_matched'));
+    }
+
+    // Validate purchase & profit
+    if (!isset($request->post['purchase']) || !is_numeric($request->post['purchase']) || $request->post['purchase'] < 0) {
+        throw new Exception(trans('error_product_purchase'));
+    }
+    if (!isset($request->post['profit']) || !is_numeric($request->post['profit']) || $request->post['profit'] < 0) {
+        throw new Exception(trans('error_product_profit'));
+    }
+
+    // Validate cost
+    if (!isset($request->post['material'])) {
+        throw new Exception(trans('error_product_material'));
+    }
+
+    // Validate max discount
+    if (!isset($request->post['max_dis']) || !is_numeric($request->post['max_dis']) || $request->post['max_dis'] < 0) {
+        throw new Exception(trans('error_product_max_discount'));
+    }
+
+    // Validate size
+    if (!isset($request->post['size']) || !is_numeric($request->post['size']) || $request->post['size'] < 0) {
+        throw new Exception(trans('error_product_size'));
+    }
+
+    // Validate karate
+    if (!isset($request->post['karate']) || !is_numeric($request->post['karate']) || $request->post['karate'] < 0) {
+        throw new Exception(trans('error_product_karate'));
+    }
+
+    // Optional fields
+    if (!isset($request->post['any_note'])) {
+        $request->post['any_note'] = '';
+    }
+
+    if (!isset($request->post['name'])) {
+        $request->post['name'] = '';
     }
 }
+
 // Check existance by id
 function validate_existance($request, $id = 0)
 {
     $statement = db()->prepare("SELECT * FROM `product` WHERE `p_code` = ? AND `id` != ?");
-    $statement->execute(array($request->post['p_code'], $id));
+    $statement->execute(array($request->post['code'], $id));
     if ($statement->rowCount() > 0) {
         throw new Exception(trans('error_product_code_exist'));
     }
@@ -642,5 +685,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action_type']) && $_GET[
             "success" => false,
             "message" => $e->getMessage()
         ]);
+    }
+}
+
+// Generate barcode number
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['action_type'] == "GET_NEW_REF_NO") {
+    try {
+        $pdo = db();
+
+        // Get last product with ref_no starting with NJV
+        $stmt = $pdo->prepare("SELECT p_code FROM product WHERE p_code LIKE 'NJV%' ORDER BY id DESC LIMIT 1");
+        $stmt->execute();
+        $last = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($last && preg_match('/NJV(\d+)/', $last['p_code'], $matches)) {
+            $lastNumber = (int)$matches[1];
+            $newNumber = $lastNumber + 1;
+            $newProductCode = 'NJV' . $newNumber;
+        } else {
+            // No previous ref_no found, start with NJV1001
+            $newProductCode = "NJV1001";
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['newProductCode' => $newProductCode]);
+        exit;
+    } catch (Exception $e) {
+        header('HTTP/1.1 500 Internal Server Error');
+        echo json_encode(['error' => $e->getMessage()]);
+        exit;
     }
 }

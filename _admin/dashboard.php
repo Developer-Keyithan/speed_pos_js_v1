@@ -31,6 +31,54 @@ $today_sales_amount = get_sum('invoice_info', 'total_payable', null, null, 0, tr
 $today_orders_amount = get_sum('orders', 'total_amt', 'order_status', 0, null, true);
 ?>
 
+<style>
+    .bg-gradient-1 {
+        background-image: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+    }
+
+    .bg-gradient-2 {
+        background-image: linear-gradient(270deg, #0700b8 0%, #00ff88 100%);
+    }
+
+    .bg-gradient-3 {
+        background-image: linear-gradient(90deg, #fcff9e 0%, #c67700 100%);
+    }
+
+    .bg-gradient-4 {
+        background-image: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+    }
+
+    .bg-gradient-5 {
+        background-image: linear-gradient(45deg, #FDD819 0%, #E80505 100%);
+    }
+
+    .bg-gradient-6 {
+        background-image: linear-gradient(45deg, #65FDF0 0%, #1D6FA3 100%);
+    }
+
+    .bg-gradient-7 {
+        background-image: linear-gradient(45deg, #69FF97 0%, #00E4FF 100%);
+    }
+
+    .bg-gradient-8 {
+        background-image: linear-gradient(45deg, #3C8CE7 0%, #00EAFF 100%);
+    }
+
+    .bg-gradient-9 {
+        background-image: linear-gradient(45deg, #ABDCFF 0%, #0396FF 100%);
+    }
+
+    .bg-gradient-10 {
+        background-image: linear-gradient(45deg, #81FBB8 0%, #28C76F 100%);
+    }
+
+    .bg-gradient-11 {
+        background-image: linear-gradient(45deg, #FFF6B7 0%, #F6416C 100%);
+    }
+    
+</style>
+</style>
+
 <div class="wrapper">
     <div class="content-header">
         <div class="container-fluid p-0">
@@ -47,57 +95,57 @@ $today_orders_amount = get_sum('orders', 'total_amt', 'order_status', 0, null, t
 
     <div class="card-body row p-1">
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-1">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pieces") ?></span><span class="badge bg-warning text-md"><?php echo $total_products ?></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-2">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_gold_pieces") ?></span><span><span class="badge bg-warning text-md"><?php echo $gold_products ?></span> <span class="badge bg-warning text-md"><?php echo $total_golds_weight . 'g' ?></span></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-3">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_silver_pieces") ?></span><span><span class="badge bg-warning text-md"><?php echo $silver_products ?></span> <span class="badge bg-warning text-md"><?php echo $total_silver_weight . 'g' ?></span></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-4">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_customers") ?></span><span class="badge bg-warning text-md"><?php echo $customers ?></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-5">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_pre_orders") ?></span><span class="badge bg-warning text-md"><?php echo $orders ?></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-6">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_unfinished_pre_orders") ?></span><span><span class="badge bg-warning text-md"><?php echo $unfinished_orders ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($unfinished_orders_outstanding, 2) ?></span></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-7">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_total_invoices") ?></span><span class="badge bg-warning text-md"><?php echo $invoices ?></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-8">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_invoice_outstandings") ?></span><span><span class="badge bg-warning text-md"><?php echo $invoices ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($invoice_outstanding, 2) ?></span></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-9">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_sold_pieces") ?></span><span class="badge bg-warning text-md"><?php echo $sold ?></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-10">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_sale") ?></span><span><span class="badge bg-warning text-md"><?php echo $today_sold ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($today_sales_amount, 2) ?></span></span></p>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 px-1 pb-2">
-            <div class="col-12 border border-primary rounded py-4 px-3 bg-primary">
+            <div class="col-12 rounded py-4 px-3 bg-gradient-11">
                 <p class="font-weight-bold m-0 row justify-content-between"><span><?php echo trans("text_today's_pre_orders") ?></span><span><span class="badge bg-warning text-md"><?php echo $today_sold ?></span> <span class="badge bg-warning text-md"><?php echo 'Rs.' . number_format($today_orders_amount, 2) ?></span></p>
             </div>
         </div>

@@ -43,7 +43,6 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         header('Content-Type: application/json');
         echo json_encode(array('msg' => trans('text_successful_created'), 'id' => $c_id));
         exit();
-
     } catch (Exception $e) {
 
         header('HTTP/1.1 422 Unprocessable Entity');
@@ -75,7 +74,6 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         header('Content-Type: application/json');
         echo json_encode(array('msg' => trans('text_update_success'), 'id' => $c_id));
         exit();
-
     } catch (Exception $e) {
 
         header('HTTP/1.1 422 Unprocessable Entity');
@@ -116,7 +114,6 @@ if ($request->server['REQUEST_METHOD'] == 'POST' && isset($request->post['action
         header('Content-Type: application/json');
         echo json_encode(array('msg' => trans('text_delete_success'), 'id' => $id));
         exit();
-
     } catch (Exception $e) {
 
         header('HTTP/1.1 422 Unprocessable Entity');
@@ -148,7 +145,6 @@ if (isset($request->get['action_type']) && $request->get['action_type'] == 'EDIT
         echo json_encode(array('errorMsg' => $e->getMessage()));
         exit();
     }
-
 }
 
 if (isset($request->get['action_type']) && $request->get['action_type'] == 'DELETE') {
@@ -169,7 +165,6 @@ if (isset($request->get['action_type']) && $request->get['action_type'] == 'DELE
         echo json_encode(array('errorMsg' => $e->getMessage()));
         exit();
     }
-
 }
 
 if ($request->server['REQUEST_METHOD'] == 'GET' && $request->get['action_type'] == "GET_TABLE_DATA") {
@@ -197,12 +192,12 @@ if ($request->server['REQUEST_METHOD'] == 'GET' && $request->get['action_type'] 
                 $stmtProd->execute([$row['id']]);
                 $productData = $stmtProd->fetch(PDO::FETCH_ASSOC);
 
-                $row['sl'] = $rowNumber; 
+                $row['sl'] = $rowNumber;
                 $row['wgt'] = (float)$productData['total_wgt'];
                 $row['pcs'] = (int)$productData['total_pcs'];
                 $row['view'] = '';
-                $row['edit'] = '<a href="#" class="btn btn-success btn-edit btn-sm"  data-id="'.$row['id'].'"><i class="fas fa-edit"></i> </a>';
-                $row['delete'] = '<a href="#" class="btn btn-danger btn-del btn-sm" data-id="'.$row['id'].'"><i class="fas fa-trash"></i> </a>';
+                $row['edit'] = '<a href="#" class="btn btn-success btn-edit btn-sm"  data-id="' . $row['id'] . '"><i class="fas fa-edit"></i> </a>';
+                $row['delete'] = '<a href="#" class="btn btn-danger btn-del btn-sm" data-id="' . $row['id'] . '"><i class="fas fa-trash"></i> </a>';
 
                 // 2️⃣ Recursively get children categories
                 $children = getCategoryTree($row['id'], $rowNumber);
@@ -227,7 +222,87 @@ if ($request->server['REQUEST_METHOD'] == 'GET' && $request->get['action_type'] 
 
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode(["data" => $treeData], JSON_PRETTY_PRINT);
+    } catch (Exception $e) {
+        header('HTTP/1.1 422 Unprocessable Entity');
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['errorMsg' => $e->getMessage()]);
+        exit();
+    }
+}
 
+
+if ($request->server['REQUEST_METHOD'] == 'GET' && $request->get['action_type'] == "GET_CAT_DATA") {
+    try {
+        // Recursive function to build tree with weights
+        function getCategoryTree($parentId = 0, $prefix = '')
+        {
+            $pdo = db();
+
+            // Get categories under this parent
+            $stmt = $pdo->prepare("SELECT * FROM category WHERE p_id = ?  ORDER BY c_name ASC");
+            $stmt->execute([$parentId]);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $tree = [];
+            $counter = 1;
+
+            foreach ($rows as $row) {
+                $rowNumber = $prefix === '' ? (string) $counter : $prefix . '.' . $counter;
+
+                // 1️⃣ Get total weight of products in this category
+                $stmtProd = $pdo->prepare("SELECT COALESCE(SUM(wgt * qty),0) as total_wgt, COALESCE(SUM(qty),0) as total_pcs FROM product WHERE c_id = ? AND status != 2");
+                $stmtProd->execute([$row['id']]);
+                $productData = $stmtProd->fetch(PDO::FETCH_ASSOC);
+
+                $row['sl'] = $rowNumber;
+                $row['wgt'] = (float)$productData['total_wgt'];
+                $row['pcs'] = (int)$productData['total_pcs'];
+                // Recursively get children
+                $children = getCategoryTree($row['id'], $rowNumber);
+
+                // Only leaf categories get Add Product button
+                if (empty($children)) {
+                    $fullPath = getCategoryPath($row['id']); // string
+                    $material = getMaterial($row['id']);    // integer
+
+                    // Encode full path as JSON string for JS
+                    $fullPathJs = json_encode($fullPath);
+
+                    $row['add_new'] = '<button type="button" class="btn btn-tool" ng-click=\'openAddProductModal('
+                        . htmlspecialchars(json_encode($row)) . ', '
+                        . $fullPathJs . ', '
+                        . $material . ')\'>'
+                        . '<i class="fas fa-plus"></i> ' . trans("button_add_product") . '</button>';
+                } else {
+                    $row['add_new'] = '<button type="button" class="btn btn-tool" ng-click="openAddCategoryModal(' . htmlspecialchars(json_encode($row)) . ')"> <i class="fas fa-plus"></i> ' . trans("button_add_category") . '</button>';
+                    $row['children'] = $children;
+                }
+                $row['edit'] = '<a href="#" class="btn btn-success btn-edit btn-sm"  data-id="' . $row['id'] . '"><i class="fas fa-edit"></i> </a>';
+                $row['delete'] = '<a href="#" class="btn btn-danger btn-del btn-sm" data-id="' . $row['id'] . '"><i class="fas fa-trash"></i> </a>';
+
+                // 2️⃣ Recursively get children categories
+                $children = getCategoryTree($row['id'], $rowNumber);
+
+                // 3️⃣ If children exist, add their weights to parent
+                if (!empty($children)) {
+                    foreach ($children as $child) {
+                        $row['wgt'] += $child['wgt'];
+                        $row['pcs'] += $child['pcs'];
+                    }
+                    $row['children'] = $children;
+                }
+
+                $tree[] = $row;
+                $counter++;
+            }
+
+            return $tree;
+        }
+
+        $treeData = getCategoryTree(0);
+
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(["data" => $treeData], JSON_PRETTY_PRINT);
     } catch (Exception $e) {
         header('HTTP/1.1 422 Unprocessable Entity');
         header('Content-Type: application/json; charset=UTF-8');

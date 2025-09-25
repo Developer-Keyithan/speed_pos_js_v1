@@ -3,8 +3,8 @@ class ModelProduct extends Model
 {
 	public function addproduct($data)
 	{
-		$statement = $this->db->prepare("INSERT INTO `product` ( `p_code`, `p_name`, `material`, `c_id`, `s_id`, `wgt`, `cost`, `status`,  `qty`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		$statement->execute(array($data['p_code'], $data['p_name'], $data['material'], $data['c_id'],  $data['s_id'],  $data['wgt'],  $data['cost'], $data['sts'],  $data['qty']));
+		$statement = $this->db->prepare("INSERT INTO `product` ( `p_code`, `p_name`, `material`, `c_id`, `s_id`, `karate`, `cost`, `wgt`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		$statement->execute(array($data['code'], $data['name'], $data['material'], $data['c_id'],  $data['s_id'],  $data['karate'],  $data['purchase'], $data['cwgt']));
 
 		return $this->db->lastInsertId();
 	}
@@ -12,7 +12,7 @@ class ModelProduct extends Model
 	public function editproduct($id, $data)
 	{
 		$statement = $this->db->prepare("UPDATE `product` SET p_code = ?,  `p_name` =?, `material` = ?, `c_id` =?, s_id = ?, `wgt` =?, `cost` =?, `status` =?, `qty` =?  WHERE `id` = ?");
-		$statement->execute(array($data['p_code'],  $data['p_name'], $data['material'],  $data['c_id'],  $data['s_id'],  $data['wgt'],  $data['cost'], $data['sts'],  $data['qty'], $id));
+		$statement->execute(array($data['p_code'],  $data['p_name'], $data['material'],  $data['c_id'],  $data['s_id'],  $data['wgt'],  $data['purchase'], $data['sts'],  $data['qty'], $id));
 
 		return $id;
 	}
